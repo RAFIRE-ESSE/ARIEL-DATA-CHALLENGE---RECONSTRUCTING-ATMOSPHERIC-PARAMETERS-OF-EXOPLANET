@@ -1,13 +1,14 @@
 # ARIEL 2025 Final Submission – Project Architecture
 
-This repository contains the final machine learning pipeline for the ARIEL 2025 competition.  
-The workflow is implemented inside the notebook `ariel-2025-final-submission.ipynb`, organized into a set of well-defined architectural layers to ensure clarity, maintainability, and reproducibility.
+This repository contains the final machine learning pipeline for the **ARIEL 2025** competition.  
+The workflow is implemented inside the notebook **`ariel-2025-final-submission.ipynb`**, organized into clearly defined architectural layers for clarity, maintainability, and reproducibility.
 
 ---
 
-# Architecture Overview
+## Architecture Overview
 
-This project is built as a complete end-to-end pipeline. It takes raw ARIEL observation data, performs feature extraction, trains machine learning models, generates predictions, applies physics-informed corrections, and builds a competition-ready submission file.
+This project implements a complete **end-to-end ML pipeline** for ARIEL telescope data.  
+It ingests raw observations, extracts features, trains models, generates predictions, applies physics-informed corrections, and finally produces a competition-ready submission.
 
 ---
 
@@ -17,114 +18,98 @@ flowchart TD
     A[Data Loading] --> B[Feature Engineering]
     B --> C[Model Training]
     C --> D[Prediction Generation]
-    D --> E[Post-processing and Noise Correction]
+    D --> E[Post-processing & Noise Correction]
     E --> F[Submission File Builder]
-Architecture Components
-1. Data Loading Layer
 
-The data loading component reads and structures all raw ARIEL telescope datasets.
+# Architecture Components
 
-Loads flux, sigma, and metadata files
+## 1. **Data Loading Layer**
 
-Merges and cleans raw observational data
+Reads and structures all raw ARIEL telescope datasets.
 
-Prepares standardized DataFrame outputs
+**Capabilities:**
+- Loads flux, sigma, and metadata files  
+- Merges and cleans raw observational data  
+- Produces standardized DataFrame outputs  
 
-Purpose: Provide a stable and consistent data foundation for all downstream processes.
+**Purpose:**  
+Provide a stable and consistent data foundation for all downstream processes.
 
-2. Feature Engineering Layer
+---
 
-This layer converts raw telescope time-series into model-ready features.
+## 2. **Feature Engineering Layer**
 
-Key operations include:
+Transforms raw telescope time-series into model-ready features.
 
-Rolling window statistical calculations
+**Key operations include:**
+- Rolling window statistical calculations  
+- Gradient, slope, and variability features  
+- Flux dip detection  
+- Symmetry and event-shape features  
+- Outlier and noise handling  
+- Injection-based anomaly analysis  
+- Highly optimized vectorized computations  
 
-Gradient, slope, and variability features
+**Purpose:**  
+Extract meaningful physical patterns from ARIEL flux data to boost model accuracy.
 
-Flux dip detection
+---
 
-Symmetry and event-shape features
+## 3. **Modeling Layer**
 
-Outlier and noise handling
+Constructs and trains machine learning models for flux prediction.
 
-Injection-based anomaly analysis
+**Features:**
+- CatBoost model implementation  
+- Multiple configuration profiles  
+- Predefined hyperparameters  
+- Fully deterministic model training  
 
-Vectorized computations for performance
+**Purpose:**  
+Train models optimized for ARIEL challenge performance and reproducibility.
 
-Purpose: Extract meaningful physical patterns from the flux time series to improve model accuracy.
+---
 
-3. Modeling Layer
+## 4. **Prediction & Ensembling Layer**
 
-This layer builds and trains the machine learning models used for prediction.
+Generates predictions from trained models.
 
-Uses the CatBoost algorithm
+**Capabilities:**
+- Computes raw model outputs  
+- Supports multiple prediction variants  
+- Optional lightweight ensembling  
+- Optimized batch inference  
 
-Supports multiple model configurations
+**Purpose:**  
+Produce stable, high-quality predictions for the ARIEL competition dataset.
 
-Contains hyperparameter definitions
+---
 
-Ensures deterministic training
+## 5. **Post-processing & Noise Correction Layer**
 
-Purpose: Train ML models optimized for ARIEL flux prediction and competition scoring.
+Applies astrophysics-informed corrections to the model outputs.
 
-4. Prediction and Ensembling Layer
+**Includes:**
+- Flux dip detection and evaluation  
+- Symmetry scoring  
+- Sigma-based noise correction formulas  
+- Gaussian smoothing  
+- Physically guided prediction adjustments  
 
-Responsible for generating predictions from trained models.
+**Purpose:**  
+Reduce noise, correct anomalies, and ensure physical realism in predictions.
 
-Computes raw model outputs
+---
 
-Supports multiple prediction variants
+## 6. **Submission Builder**
 
-Optional simple ensembling
+Produces the official ARIEL competition submission.
 
-Optimized batch inference
+**Responsibilities:**
+- Integrates corrected predictions  
+- Converts outputs into competition format  
+- Builds final `id → value` mapping  
+- Provides a preview before saving  
 
-Purpose: Produce stable, high-quality predictions for the ARIEL challenge dataset.
-
-5. Post-processing and Noise Correction Layer
-
-Applies astrophysics-aware corrections to improve prediction realism.
-
-Includes:
-
-Flux dip detection and analysis
-
-Symmetry scoring
-
-Sigma noise correction formulas
-
-Gaussian smoothing
-
-Physically consistent prediction adjustments
-
-Purpose: Reduce noise, correct anomalies, and align predictions with expected telescope behavior.
-
-6. Submission Builder
-
-This final component constructs the official ARIEL competition submission file.
-
-Combines corrected predictions
-
-Converts outputs to the required format
-
-Creates the final id → value mapping
-
-Previews the submission file before saving
-
-Purpose: Automate and validate the generation of the final competition submission CSV file.
-
-Conceptual Project Structure
-
-Although the project lives inside a single notebook, it is logically structured as follows:
-
-ariel-2025-final-submission.ipynb
-│
-├── Configuration and Parameters
-├── Utility Functions
-├── Data Loading
-├── Feature Engineering
-├── Model Training
-├── Prediction Pipeline
-├── Post-processing
-└── Submission Builder
+**Purpose:**  
+Automate and validate generation of the final submission CSV file.
