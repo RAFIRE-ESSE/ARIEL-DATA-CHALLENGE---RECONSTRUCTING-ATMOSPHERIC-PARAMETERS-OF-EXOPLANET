@@ -13,7 +13,6 @@ This project is built as a complete end-to-end pipeline. It takes raw ARIEL obse
 
 ## High-Level Pipeline
 
-```mermaid
 flowchart TD
     A[Data Loading] --> B[Feature Engineering]
     B --> C[Model Training]
